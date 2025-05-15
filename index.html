@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Обмін речами та послугами</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        body {
+            background-color: #0f172a;
+        }
+
+        .ad-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+    </style>
+</head>
+<body class="text-white min-h-screen flex flex-col">
+    <!-- Header -->
+    <header class="bg-gray-900 p-4 shadow-md sticky top-0 z-10">
+        <div class="container mx-auto flex flex-col md:flex-row justify-between items-center">
+            <div class="flex items-center mb-4 md:mb-0">
+                <h1 class="text-2xl font-bold">Локальний Обмін</h1>
+            </div>
+            <nav class="flex flex-col md:flex-row items-center space-y-2 md:space-y-0 md:space-x-4">
+                <a href="index.html" class="hover:underline">Головна</a>
+                <a href="ads.html" class="hover:underline">Оголошення</a>
+                <a href="#" class="hover:underline">Про нас</a>
+                <a href="#" class="hover:underline">Контакти</a>
+                <span id="authButtons" class="flex space-x-2">
+                    <button id="loginButton" class="bg-blue-600 px-4 py-2 rounded hover:bg-blue-700">Увійти</button>
+                    <button id="registerButton" class="bg-green-600 px-4 py-2 rounded hover:bg-green-700">Реєстрація</button>
+                </span>
+                <span id="userWelcome" class="hidden items-center">
+                    <span id="currentUserName" class="mr-2"></span>
+                    <a href="profile.html" class="text-blue-400 hover:text-blue-300"><i class="fas fa-user-circle text-xl"></i></a>
+                    <button id="logoutButton" class="ml-2 bg-red-600 px-3 py-1 rounded hover:bg-red-700">Вийти</button>
+                </span>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="flex-grow">
+        <!-- Hero Section -->
+        <section class="py-20 px-6 bg-gradient-to-br from-gray-800 to-gray-900">
+            <div class="container mx-auto text-center max-w-3xl">
+                <h2 class="text-4xl font-bold mb-6">Обмінюйся речами та послугами з сусідами легко!</h2>
+                <p class="text-lg mb-8 text-gray-300">
+                    Допоможи іншим та отримай допомогу сам — безкоштовно, швидко, локально.
+                </p>
+                <a href="ads.html" class="bg-green-500 text-white px-6 py-3 rounded-lg text-lg hover:bg-green-600 transition inline-block">Переглянути оголошення</a>
+            </div>
+        </section>
+
+        <!-- Features Section -->
+        <section class="py-16 px-6 bg-gray-800">
+            <div class="container mx-auto">
+                <h3 class="text-2xl font-semibold mb-10 text-center">Переваги платформи</h3>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <div class="bg-gray-700 p-6 rounded-lg">
+                        <div class="text-green-400 text-4xl mb-4"><i class="fas fa-map-marker-alt"></i></div>
+                        <h4 class="text-xl font-bold mb-2">Локальність</h4>
+                        <p class="text-gray-400">Всі оголошення — від сусідів, яких ви можете знати особисто.</p>
+                    </div>
+                    <div class="bg-gray-700 p-6 rounded-lg">
+                        <div class="text-green-400 text-4xl mb-4"><i class="fas fa-thumbs-up"></i></div>
+                        <h4 class="text-xl font-bold mb-2">Простота</h4>
+                        <p class="text-gray-400">Інтуїтивно зрозумілий інтерфейс навіть для недосвідчених користувачів.</p>
+                    </div>
+                    <div class="bg-gray-700 p-6 rounded-lg">
+                        <div class="text-green-400 text-4xl mb-4"><i class="fas fa-hand-holding-heart"></i></div>
+                        <h4 class="text-xl font-bold mb-2">Безкоштовність</h4>
+                        <p class="text-gray-400">Обмінюйтеся речами або послугами без грошових витрат.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Recent Ads Preview -->
+        <section class="py-16 px-6">
+            <div class="container mx-auto">
+                <h3 class="text-2xl font-semibold mb-10 text-center">Останні оголошення</h3>
+                <div id="recentAds" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+                    <!-- Ads will be loaded here -->
+                </div>
+                <div class="text-center">
+                    <a href="ads.html" class="text-green-400 hover:text-green-300">Дивитися всі оголошення →</a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-center p-4 text-gray-500">
+        <div class="container mx-auto">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <p>&copy; 2025 Локальний Обмін. Всі права захищені.</p>
+                <div class="flex space-x-4 mt-4 md:mt-0">
+                    <a href="#" class="hover:text-gray-300"><i class="fab fa-facebook"></i></a>
+                    <a href="#" class="hover:text-gray-300"><i class="fab fa-instagram"></i></a>
+                    <a href="#" class="hover:text-gray-300"><i class="fab fa-telegram"></i></a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Auth Modals -->
+    <div id="loginModal" class="fixed inset-0 bg-black bg-opacity-50 hidden flex items-center justify-center z-50 p-4">
+        <div class="bg-gray-800 p-8 rounded-lg w-full max-w-md">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-xl font-bold">Увійти</h2>
+                <button id="closeLoginModal" class="text-gray-400 hover:text-white">&times;</button>
+            </div>
+            <form id="loginForm" class="space-y-4">
+                <div>
+                    <label class="block text-sm font-medium mb-1" for="loginEmail">Email</label>
+                    <input type="email" id="loginEmail" placeholder="Ваш email" class="w-full px-4 py-2 rounded bg-gray-700 text-white border border-gray-600" required>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium mb-1" for="loginPass">Пароль</label>
+                    <input type="password" id="loginPass" placeholder="Пароль" class="w-full px-4 py-2 rounded bg-gray-700 text-white border border-gray-600" required>
+                </div>
+                <button type="submit" class="w-full bg-blue-600 py-2 rounded hover:bg-blue-700">Увійти</button>
+                <p class="text-center text-sm text-gray-400">Ще не зареєстровані? <button type="button" id="switchToRegister" class="text-blue-400 hover:text-blue-300">Створити акаунт</button></p>
+            </form>
+        </div>
+    </div>
+
+    <div id="registerModal" class="fixed inset-0 bg-black bg-opacity-50 hidden flex items-center justify-center z-50 p-4">
+        <div class="bg-gray-800 p-8 rounded-lg w-full max-w-md">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-xl font-bold">Реєстрація</h2>
+                <button id="closeRegisterModal" class="text-gray-400 hover:text-white">&times;</button>
+            </div>
+            <form id="registerForm" class="space-y-4">
+                <div>
+                    <label class="block text-sm font-medium mb-1" for="registerName">Ім'я</label>
+                    <input type="text" id="registerName" placeholder="Ваше ім'я" class="w-full px-4 py-2 rounded bg-gray-700 text-white border border-gray-600" required>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium mb-1" for="registerEmail">Email</label>
+                    <input type="email" id="registerEmail" placeholder="Ваш email" class="w-full px-4 py-2 rounded bg-gray-700 text-white border border-gray-600" required>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium mb-1" for="registerPass">Пароль</label>
+                    <input type="password" id="registerPass" placeholder="Пароль (мінімум 6 символів)" class="w-full px-4 py-2 rounded bg-gray-700 text-white border border-gray-600" required minlength="6">
+                </div>
+                <button type="submit" class="w-full bg-green-600 py-2 rounded hover:bg-green-700">Зареєструватися</button>
+                <p class="text-center text-sm text-gray-400">Вже маєте акаунт? <button type="button" id="switchToLogin" class="text-blue-400 hover:text-blue-300">Увійти</button></p>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Auth functionality
+        const authButtons = document.getElementById("authButtons");
+        const userWelcome = document.getElementById("userWelcome");
+        const currentUserName = document.getElementById("currentUserName");
+        const loginModal = document.getElementById("loginModal");
+        const registerModal = document.getElementById("registerModal");
+        const loginForm = document.getElementById("loginForm");
+        const registerForm = document.getElementById("registerForm");
+        const closeLoginModal = document.getElementById("closeLoginModal");
+        const closeRegisterModal = document.getElementById("closeRegisterModal");
+        const switchToRegister = document.getElementById("switchToRegister");
+        const switchToLogin = document.getElementById("switchToLogin");
+        const logoutButton = document.getElementById("logoutButton");
+
+        // Load recent ads
+        async function loadRecentAds() {
+            try {
+                const response = await fetch('/api/ads?limit=3');
+                const data = await response.json();
+                const adsContainer = document.getElementById('recentAds');
+
+                if (data.ads.length === 0) {
+                    adsContainer.innerHTML = '<p class="text-gray-400 col-span-3 text-center">Оголошень ще немає.</p>';
+                } else {
+                    adsContainer.innerHTML = data.ads.map(ad => `
+                            <div class="bg-gray-800 p-6 rounded-lg shadow-lg ad-card transition duration-300">
+                                <h3 class="text-xl font-semibold mb-2">${ad.title}</h3>
+                                <p class="text-gray-400 mb-4">${ad.description}</p>
+                                <div class="flex justify-between items-center">
+                                    <span class="text-sm bg-green-600 px-2 py-1 rounded">${ad.type}</span>
+                                    <span class="text-sm text-gray-500">${new Date(ad.createdAt).toLocaleDateString()}</span>
+                                </div>
+                            </div>
+                        `).join('');
+                }
+            } catch (err) {
+                console.error('Error loading ads:', err);
+            }
+        }
+
+        // Update UI based on auth state
+        function updateUI() {
+            const token = localStorage.getItem('token');
+            const user = JSON.parse(localStorage.getItem('user'));
+
+            if (token && user) {
+                authButtons.classList.add('hidden');
+                userWelcome.classList.remove('hidden');
+                currentUserName.textContent = user.name;
+            } else {
+                authButtons.classList.remove('hidden');
+                userWelcome.classList.add('hidden');
+                localStorage.removeItem('token');
+                localStorage.removeItem('user');
+            }
+        }
+
+        // Event listeners
+        document.getElementById('loginButton').onclick = () => {
+            loginModal.classList.remove('hidden');
+            registerModal.classList.add('hidden');
+        };
+
+        document.getElementById('registerButton').onclick = () => {
+            registerModal.classList.remove('hidden');
+            loginModal.classList.add('hidden');
+        };
+
+        closeLoginModal.onclick = () => loginModal.classList.add('hidden');
+        closeRegisterModal.onclick = () => registerModal.classList.add('hidden');
+        switchToRegister.onclick = () => {
+            loginModal.classList.add('hidden');
+            registerModal.classList.remove('hidden');
+        };
+        switchToLogin.onclick = () => {
+            registerModal.classList.add('hidden');
+            loginModal.classList.remove('hidden');
+        };
+
+        logoutButton.onclick = () => {
+            localStorage.removeItem('token');
+            localStorage.removeItem('user');
+            updateUI();
+            window.location.reload();
+        };
+
+        // Login form submission
+        loginForm.addEventListener('submit', async function (e) {
+            e.preventDefault();
+            const email = document.getElementById('loginEmail').value.trim();
+            const password = document.getElementById('loginPass').value;
+
+            try {
+                const response = await fetch('/api/auth/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, password })
+                });
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(data.error || 'Login failed');
+                }
+
+                localStorage.setItem('token', data.token);
+                localStorage.setItem('user', JSON.stringify(data.user));
+                loginModal.classList.add('hidden');
+                updateUI();
+                window.location.reload();
+            } catch (err) {
+                alert(err.message);
+            }
+        });
+
+        // Register form submission
+        registerForm.addEventListener('submit', async function (e) {
+            e.preventDefault();
+            const name = document.getElementById('registerName').value.trim();
+            const email = document.getElementById('registerEmail').value.trim();
+            const password = document.getElementById('registerPass').value;
+
+            try {
+                const response = await fetch('/api/auth/register', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ name, email, password })
+                });
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(data.error || 'Registration failed');
+                }
+
+                localStorage.setItem('token', data.token);
+                localStorage.setItem('user', JSON.stringify(data.user));
+                registerModal.classList.add('hidden');
+                updateUI();
+                window.location.reload();
+            } catch (err) {
+                alert(err.message);
+            }
+        });
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            updateUI();
+            loadRecentAds();
+        });
+    </script>
+</body>
+</html>

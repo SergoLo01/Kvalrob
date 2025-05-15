@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Оголошення | Локальний Обмін</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        body {
+            background-color: #0f172a;
+        }
+
+        .ad-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+    </style>
+</head>
+<body class="text-white min-h-screen flex flex-col">
+    <!-- Header -->
+    <header class="bg-gray-900 p-4 shadow-md sticky top-0 z-10">
+        <div class="container mx-auto flex flex-col md:flex-row justify-between items-center">
+            <div class="flex items-center mb-4 md:mb-0">
+                <h1 class="text-2xl font-bold">Локальний Обмін</h1>
+            </div>
+            <nav class="flex flex-col md:flex-row items-center space-y-2 md:space-y-0 md:space-x-4">
+                <a href="index.html" class="hover:underline">Головна</a>
+                <a href="ads.html" class="hover:underline font-semibold">Оголошення</a>
+                <a href="#" class="hover:underline">Про нас</a>
+                <a href="#" class="hover:underline">Контакти</a>
+                <span id="authButtons" class="flex space-x-2">
+                    <button id="loginButton" class="bg-blue-600 px-4 py-2 rounded hover:bg-blue-700">Увійти</button>
+                    <button id="registerButton" class="bg-green-600 px-4 py-2 rounded hover:bg-green-700">Реєстрація</button>
+                </span>
+                <span id="userWelcome" class="hidden items-center">
+                    <span id="currentUserName" class="mr-2"></span>
+                    <a href="profile.html" class="text-blue-400 hover:text-blue-300"><i class="fas fa-user-circle text-xl"></i></a>
+                    <button id="logoutButton" class="ml-2 bg-red-600 px-3 py-1 rounded hover:bg-red-700">Вийти</button>
+                </span>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="flex-grow py-8 px-4">
+        <div class="container mx-auto">
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8">
+                <h2 class="text-3xl font-bold mb-4 md:mb-0">Усі оголошення</h2>
+                <div class="flex flex-col md:flex-row space-y-2 md:space-y-0 md:space-x-4 w-full md:w-auto">
+                    <select id="typeFilter" class="px-4 py-2 rounded bg-gray-700 text-white border border-gray-600">
+                        <option value="">Всі типи</option>
+                        <option value="Віддам">Віддам</option>
+                        <option value="Позичу">Позичу</option>
+                        <option value="Допоможу">Допоможу</option>
+                        <option value="Шукаю">Шукаю</option>
+                    </select>
+                    <div class="relative">
+                        <input type="text" id="searchInput" placeholder="Пошук..." class="px-4 py-2 rounded bg-gray-700 text-white border border-gray-600 w-full">
+                        <button id="searchButton" class="absolute right-2 top-2 text-gray-400 hover:text-white">
+                            <i class="fas fa-search"></i>
+                        </button>
+                    </div>
+                    <a href="profile.html#create-ad" id="createAdButton" class="hidden bg-green-600 px-4 py-2 rounded hover:bg-green-700 text-center">
+                        <i class="fas fa-plus mr-2"></i>Додати оголошення
+                    </a>
+                </div>
+            </div>
+
+            <div id="adsContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+                <!-- Ads will be loaded here -->
+            </div>
+
+            <div id="pagination" class="flex justify-center space-x-2">
+                <!-- Pagination will be loaded here -->
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-center p-4 text-gray-500">
+        <div class="container mx-auto">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <p>&copy; 2025 Локальний Обмін. Всі права захищені.</p>
+                <div class="flex space-x-4 mt-4 md:mt-0">
+                    <a href="#" class="hover:text-gray-300"><i class="fab fa-facebook"></i></a>
+                    <a href="#" class="hover:text-gray-300"><i class="fab fa-instagram"></i></a>
+                    <a href="#" class="hover:text-gray-300"><i class="fab fa-telegram"></i></a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Auth Modals (same as in index.html) -->
+    <div id="loginModal" class="fixed inset-0 bg-black bg-opacity-50 hidden flex items-center justify-center z-50 p-4">
+        <!-- ... same as in index.html ... -->
+    </div>
+
+    <div id="registerModal" class="fixed inset-0 bg-black bg-opacity-50 hidden flex items-center justify-center z-50 p-4">
+        <!-- ... same as in index.html ... -->
+    </div>
+
+    <script>
+        // Shared auth functionality (same as in index.html)
+        // ...
+
+        // Ads functionality
+        let currentPage = 1;
+        const itemsPerPage = 6;
+
+        async function loadAds(page = 1, type = '', search = '') {
+            try {
+                currentPage = page;
+                const url = `/api/ads?page=${page}&limit=${itemsPerPage}${type ? `&type=${type}` : ''
+                    }${search ? `&search=${search}` : ''
+                    }`;
+
+                const response = await fetch(url);
+                const data = await response.json();
+
+                const adsContainer = document.getElementById('adsContainer');
+                const paginationContainer = document.getElementById('pagination');
+
+                if (!data.ads || data.ads.length === 0) {
+                    adsContainer.innerHTML = '<p class="text-gray-400 col-span-3 text-center">Оголошень не знайдено.</p>';
+                    paginationContainer.innerHTML = '';
+                    return;
+                }
+
+                // Render ads
+                adsContainer.innerHTML = data.ads.map(ad => `
+                        <div class="bg-gray-800 p-6 rounded-lg shadow-lg ad-card transition duration-300">
+                            <div class="flex items-center mb-4">
+                                <div class="w-10 h-10 rounded-full bg-gray-700 flex items-center justify-center mr-3">
+                                    <i class="fas fa-user text-lg"></i>
+                                </div>
+                                <div>
+                                    <h4 class="font-semibold">${ad.user?.name || 'Анонім'}</h4>
+                                    <p class="text-xs text-gray-400">${new Date(ad.createdAt).toLocaleDateString()}</p>
+                                </div>
+                            </div>
+                            <h3 class="text-xl font-semibold mb-2">${ad.title}</h3>
+                            <p class="text-gray-400 mb-4">${ad.description}</p>
+                            <div class="flex justify-between items-center">
+                                <span class="text-sm bg-green-600 px-2 py-1 rounded">${ad.type}</span>
+                                ${ad.location ? `<span class="text-sm text-gray-500"><i class="fas fa-map-marker-alt mr-1"></i>${ad.location}</span>` : ''}
+                            </div>
+                        </div>
+                    `).join('');
+
+                // Render pagination
+                if (data.totalPages > 1) {
+                    let paginationHTML = '';
+
+                    if (currentPage > 1) {
+                        paginationHTML += `<button onclick="loadAds(${currentPage - 1}, '${type}', '${search}')" class="px-3 py-1 rounded bg-gray-700 hover:bg-gray-600">
+                                <i class="fas fa-chevron-left"></i>
+                            </button>`;
+                    }
+
+                    for (let i = 1; i <= data.totalPages; i++) {
+                        if (i === currentPage) {
+                            paginationHTML += `<span class="px-3 py-1 rounded bg-green-600">${i}</span>`;
+                        } else if (
+                            i === 1 ||
+                            i === data.totalPages ||
+                            (i >= currentPage - 1 && i <= currentPage + 1)
+                        ) {
+                            paginationHTML += `<button onclick="loadAds(${i}, '${type}', '${search}')" class="px-3 py-1 rounded bg-gray-700 hover:bg-gray-600">${i}</button>`;
+                        } else if (
+                            i === currentPage - 2 ||
+                            i === currentPage + 2
+                        ) {
+                            paginationHTML += `<span class="px-3 py-1">...</span>`;
+                        }
+                    }
+
+                    if (currentPage < data.totalPages) {
+                        paginationHTML += `<button onclick="loadAds(${currentPage + 1}, '${type}', '${search}')" class="px-3 py-1 rounded bg-gray-700 hover:bg-gray-600">
+                                <i class="fas fa-chevron-right"></i>
+                            </button>`;
+                    }
+
+                    paginationContainer.innerHTML = paginationHTML;
+                } else {
+                    paginationContainer.innerHTML = '';
+                }
+            } catch (err) {
+                console.error('Error loading ads:', err);
+                document.getElementById('adsContainer').innerHTML = `
+                        <p class="text-red-400 col-span-3 text-center">Помилка завантаження оголошень. Спробуйте оновити сторінку.</p>
+                    `;
+            }
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            updateUI();
+            loadAds();
+
+            // Check auth to show create ad button
+            const token = localStorage.getItem('token');
+            if (token) {
+                document.getElementById('createAdButton').classList.remove('hidden');
+            }
+
+            // Filter and search functionality
+            document.getElementById('typeFilter').addEventListener('change', (e) => {
+                const searchValue = document.getElementById('searchInput').value;
+                loadAds(1, e.target.value, searchValue);
+            });
+
+            document.getElementById('searchButton').addEventListener('click', () => {
+                const typeValue = document.getElementById('typeFilter').value;
+                const searchValue = document.getElementById('searchInput').value;
+                loadAds(1, typeValue, searchValue);
+            });
+
+            document.getElementById('searchInput').addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    const typeValue = document.getElementById('typeFilter').value;
+                    const searchValue = document.getElementById('searchInput').value;
+                    loadAds(1,
+                        </script>
+    </body>
+</html>
